@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/titlebar</color>
+    <color name="colorPrimaryDark">#c64507</color>
+    <color name="colorAccent">#340606</color>
+    <color name="titlebar">#f26522</color>
+    <color name="color1">@color/titlebar</color>
+    <color name="color2">@color/titlebar</color>
+    <color name="color3">#616161</color>
+    <color name="color4">#1D4467</color>
+    <color name="colorblack">#000000</color>
+    <color name="colorsilver">#c0c0c0</color>
+    <color name="dashboardtitle">#616161</color>
+    <color name="edtborder">#aeacac</color>
+    <color name="hint">#aeacac</color>
+    <color name="runsheetrow">#e1dede</color>
+    <color name="bg">#ecebeb</color>
+    <color name="ColorPrimary">#202324</color>
+    <color name="BorderLineColor">#B8B9B1</color>
+    <color name="CanvasBackground">#ffffff</color>
+    <color name="runsheet_title">#3e3e3e</color>
+    <color name="runsheet_text">#6b6b6b</color>
+    <color name="runsheet_btn">@color/titlebar</color>
+    <color name="delivered">#4c9702 </color>
+    <color name="RTO">#ee8734</color>
+    <color name="pending">#166fad</color>
+    <color name="no_status">#f52e41</color>
+</resources>
