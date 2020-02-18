@@ -4,8 +4,8 @@ public class Model {
 
     private String customername;
 
-    public Model(String fruit) {
-        this.customername = fruit;
+    public Model(String cust_name) {
+        this.customername = cust_name;
     }
 
     public String getCustomername() {

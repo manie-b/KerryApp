@@ -18,7 +18,6 @@ public class CustomerPageActivity extends AppCompatActivity {
     List<Model> modelArrayList;
 
     private CustomAdapter customAdapter;
-    private String[] Customerlist=new String[]{"Britania","vizibee","Kerry","L&T","Ucal","Murugan","Natarajan"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +32,14 @@ public class CustomerPageActivity extends AppCompatActivity {
         modelArrayList=new ArrayList<>();
 
         //adding some items to our list
-        modelArrayList.add(new Model("Kerry"));
-        modelArrayList.add(new Model("Murugan"));
-        modelArrayList.add(new Model("Natarajan"));
-        modelArrayList.add(new Model("Mani"));
-        modelArrayList.add(new Model("Mapol"));
+        modelArrayList.add(new Model("Ashok Leyland Ltd"));
+        modelArrayList.add(new Model("Brakes India Pvt Ltd"));
+        modelArrayList.add(new Model("Isuzu Motors India Pvt Ltd"));
+        modelArrayList.add(new Model("MRF Ltd"));
+        modelArrayList.add(new Model("Nelcast Ltd"));
+        modelArrayList.add(new Model("Royal Enfield (Unit of Eicher Motors)"));
+        modelArrayList.add(new Model("Tractors and Farm Equipment Ltd (TAFE)"));
+        modelArrayList.add(new Model("WABCO India Ltd"));
 
         CustomAdapter adapter=new CustomAdapter(this,modelArrayList);
         recyclerView.setAdapter(adapter);
