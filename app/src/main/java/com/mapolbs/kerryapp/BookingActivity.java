@@ -70,7 +70,6 @@ public class BookingActivity extends AppCompatActivity {
         rb_credit=findViewById(R.id.rbtn_credit);
         rb_topay=findViewById(R.id.rbtn_topay);
         rb_paid=findViewById(R.id.rbtn_paid);
-        rb_foc=findViewById(R.id.rbtn_foc);
         rb_box=findViewById(R.id.rbtn_box);
         rb_weight=findViewById(R.id.rbtn_weight);
         rb_fixed=findViewById(R.id.rbtn_fixed);

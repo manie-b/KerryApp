@@ -192,7 +192,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="32dp"
                     android:background="@drawable/shapeuserbox"
                     android:layout_marginRight="16dp"
                     android:layout_marginLeft="16dp"
@@ -257,7 +257,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="17dp"
                     android:orientation="vertical">
 
                     <TextView
