@@ -6,10 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
@@ -20,7 +23,13 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.mapolbs.kerryapp.Utilities.ScanActivity;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -37,7 +46,10 @@ public class BookingActivity extends AppCompatActivity {
 
     public static TextView txt_barcodeResult;
 
-    ZXingScannerView mScannerView;
+    String currentPhotoPath;
+    String devicedate;
+    File captureImageFile;
+    private Uri fileuri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +94,27 @@ public class BookingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent,1);
+
+
+                //file store
+                Calendar calendar=Calendar.getInstance();
+                SimpleDateFormat simpleDateFormat=new SimpleDateFormat("ddMMyyyy_HHmmss");
+                devicedate=simpleDateFormat.format(calendar.getTime());
+
+                File destination=new File(Environment.getExternalStorageDirectory().getPath(),File.separator+".Kerry_pickup"+File.separator+"KerryCaptureImages");
+                captureImageFile=new File(destination,"/IMG"+"_"+devicedate+".jpg");
+
+                System.out.println(captureImageFile);
+
+                if (!destination.exists())
+                {
+                    destination.mkdirs();
+                    System.out.println("Camera Pic");
+                }
+
+                fileuri=Uri.fromFile(captureImageFile);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT,fileuri);
+
             }
         });
 
@@ -142,6 +175,13 @@ public class BookingActivity extends AppCompatActivity {
     }
 
 
+    private void captureImage()
+    {
+        Intent takePicIntent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(takePicIntent,RequestPermissionCode);
+    }
+
+
 
     private void EnableRuntimePermission() {
 
@@ -185,9 +225,12 @@ public class BookingActivity extends AppCompatActivity {
         if (requestCode==1 && resultCode==RESULT_OK)
         {
             capture_img1.setVisibility(View.VISIBLE);
+            //Glide.with(this).load(currentPhotoPath).into(capture_img1);
+            Glide.with(this).load(new File(fileuri.getPath())).into(capture_img1);
             Bitmap bitmap= (Bitmap) data.getExtras().get("data");
             capture_img1.setImageBitmap(bitmap);
-        }else if (requestCode==2&&resultCode==RESULT_OK)
+        }
+        else if (requestCode==2&&resultCode==RESULT_OK)
         {
             capture_img2.setVisibility(View.VISIBLE);
             Bitmap bitmap= (Bitmap) data.getExtras().get("data");
@@ -196,6 +239,14 @@ public class BookingActivity extends AppCompatActivity {
 
     }
 
+
+    public Uri getImageUri(Context inContext,Bitmap inImage)
+    {
+        ByteArrayOutputStream bytes=new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG,100,bytes);
+        String path= MediaStore.Images.Media.insertImage(inContext.getContentResolver(),inImage,"Title",null);
+        return Uri.parse(path);
+    }
 
 
 }
