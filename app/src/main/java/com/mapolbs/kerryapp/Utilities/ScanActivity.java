@@ -39,7 +39,7 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
     @Override
     public void handleResult(Result result) {
 
-        BookingActivity.txt_barcodeResult.setText(result.getText());
+        BookingActivity.et_consignNumber.setText(result.getText());
         onBackPressed();
 
         // If you would like to resume scanning, call this method below:

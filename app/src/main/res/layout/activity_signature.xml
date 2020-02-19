@@ -38,6 +38,26 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="18dp"
+                        android:hint="In-Time"/>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -45,7 +65,6 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:id="@+id/llayout_intime">
-
 
                     <ImageView
                         android:layout_width="30dp"
@@ -65,38 +84,6 @@
                         android:id="@+id/intime_input"
                         android:textSize="18dp"
                         android:hint="Select In-Time"/>
-
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/shapeuserbox"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginTop="32dp"
-                    android:id="@+id/llayout_outtime">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_time"
-                        android:layout_gravity="center_vertical" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:editable="false"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:id="@+id/outtime_input"
-                        android:textSize="18dp"
-                        android:hint="Select Out-Time"/>
 
 
                 </LinearLayout>
@@ -264,32 +251,57 @@
 
                 </LinearLayout>
 
-                <!--<LinearLayout
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="32dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="18dp"
+                        android:hint="Out-Time"/>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:background="@drawable/shapeuserbox"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
-                    android:background="@drawable/shapeuserbox"
-                    android:layout_marginTop="16dp">
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/llayout_outtime">
 
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_time"
+                        android:layout_gravity="center_vertical" />
 
-                    <Button
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/saveButton"
-                        android:text="Save"
-                        android:textColor="#ffffff"
-                        android:background="@drawable/shapeloginbtn"
+                        android:editable="false"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:textAllCaps="false"
-                        android:layout_weight="1"/>
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:id="@+id/outtime_input"
+                        android:textSize="18dp"
+                        android:hint="Select Out-Time"/>
 
 
-                </LinearLayout>-->
+                </LinearLayout>
 
 
                 <Button
@@ -297,7 +309,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/btnsubmit_sign"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="70dp"
+                    android:layout_marginTop="50dp"
                     android:layout_marginBottom="25dp"
                     android:text="Submit"
                     android:textColor="#ffffff"

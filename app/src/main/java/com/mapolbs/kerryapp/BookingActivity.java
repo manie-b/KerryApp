@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -44,7 +45,7 @@ public class BookingActivity extends AppCompatActivity {
 
     LinearLayout ll_packagetype,ll_couriertype,ll_NoOfpackage;
 
-    public static TextView txt_barcodeResult;
+    public static EditText et_consignNumber;
 
     String currentPhotoPath;
     String devicedate;
@@ -63,7 +64,6 @@ public class BookingActivity extends AppCompatActivity {
         capture_img2=findViewById(R.id.cap2_imageview);
         btn_barcodescan=findViewById(R.id.btn_barcodescan);
 
-        txt_barcodeResult=findViewById(R.id.txt_barcode_result);
 
         rb_cargo=findViewById(R.id.rbtn_cargo);
         rb_courier=findViewById(R.id.rbtn_courier);
@@ -76,6 +76,8 @@ public class BookingActivity extends AppCompatActivity {
         rb_fixed=findViewById(R.id.rbtn_fixed);
         rb_docs=findViewById(R.id.rbtn_docs);
         rb_nondocs=findViewById(R.id.rbtn_nondocs);
+
+        et_consignNumber=findViewById(R.id.et_consign_num);
 
         rgrpcourier_type=findViewById(R.id.radio_grp_courier);
         rgrp_packagetype=findViewById(R.id.radio_grp_package);

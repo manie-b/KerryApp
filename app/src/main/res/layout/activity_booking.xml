@@ -284,98 +284,38 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/llayout_consign_num"
                     android:orientation="horizontal"
+                    android:gravity="center"
                     android:layout_marginRight="16dp"
                     android:background="@drawable/shapeuserbox"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="10dp">
 
-                    <!--<ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginTop="7dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:src="@drawable/ic_consign_num"/>-->
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="17dp"
-                        android:text="Consignment No: "/>
+                        android:text="Consignment No:"/>
 
                     <EditText
-                        android:layout_width="match_parent"
+                        android:layout_width="130dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
+                        android:textSize="15dp"
                         android:id="@+id/et_consign_num"/>
 
-                </LinearLayout>
 
-
-                <!--barcode scan-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:id="@+id/ll_bcodescan"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:background="@drawable/shapeuserbox">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="17dp"
-                            android:text="Barcode Scan: "/>
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_marginBottom="10dp"
+                        <Button
+                            android:layout_width="30dp"
+                            android:layout_height="25dp"
                             android:layout_marginTop="10dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:gravity="center">
-
-                            <Button
-                                android:layout_width="70dp"
-                                android:layout_height="50dp"
-                                android:layout_marginTop="10dp"
-                                android:id="@+id/btn_barcodescan"
-                                android:background="@drawable/ic_barcode"/>
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/txt_barcode_result"
-                                android:layout_marginTop="8dp"
-                                android:gravity="center"
-                                android:layout_marginBottom="8dp"
-                                android:layout_marginRight="10dp"
-                                android:layout_marginLeft="10dp"
-                                android:textSize="17dp"/>
-
-                        </LinearLayout>
-
-                    </LinearLayout>
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginRight="5dp"
+                            android:id="@+id/btn_barcodescan"
+                            android:background="@drawable/ic_barcode"/>
 
 
                 </LinearLayout>
-                <!--barcode scan-->
-
 
 
                 <!--payment-->
