@@ -78,6 +78,12 @@ public class TypeSelectionActivity extends AppCompatActivity implements AdapterV
         // On selecting a spinner item
         String item=parent.getItemAtPosition(position).toString();
 
+        if (parent.getItemAtPosition(position).equals("Normal"))
+        {
+            Intent intent=new Intent(TypeSelectionActivity.this,PaymentGatewayPinelabsActivity.class);
+            startActivity(intent);
+        }
+
     }
 
     @Override
