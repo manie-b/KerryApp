@@ -39,10 +39,13 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 
-    /*** For managing request permission*/
+    /*** For managing request permission*/ // dexter runtime permissions
     implementation 'com.karumi:dexter:4.2.0'
 
     // Zxing barcode dependency
     implementation 'me.dm7.barcodescanner:zxing:1.9.8'
+
+    // location play services
+    implementation 'com.google.android.gms:play-services-location:15.0.1'
 
 }
