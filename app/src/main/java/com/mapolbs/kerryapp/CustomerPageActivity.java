@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.mapolbs.kerryapp.Adapter.CustomAdapter;
 import com.mapolbs.kerryapp.Model.Model;
@@ -15,9 +17,13 @@ import java.util.List;
 public class CustomerPageActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
+    public TextView txtPickupsheetno;
     List<Model> modelArrayList;
 
     private CustomAdapter customAdapter;
+
+    //list data-Declare variable
+    String pickup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +32,13 @@ public class CustomerPageActivity extends AppCompatActivity {
 
         //init
         recyclerView=findViewById(R.id.recyclerview_custom);
+        txtPickupsheetno=findViewById(R.id.txt_pickupsheetno);
+
+        Intent intent=getIntent();
+        pickup=intent.getStringExtra("pickup");
+
+        // Set the string into TextView
+        txtPickupsheetno.setText(pickup);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 

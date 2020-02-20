@@ -2,6 +2,7 @@ package com.mapolbs.kerryapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,12 +25,12 @@ public class TypeSelectionActivity extends AppCompatActivity implements AdapterV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_type_selection);
 
-
+        //init
         spinnerType_selection=findViewById(R.id.spin_type);
 
         spinnerType_selection.setOnItemSelectedListener(this);
 
-        //Drop down elements
+        /*Drop down - start*/
         List<String> selectionArray=new ArrayList<>();
         selectionArray.add("Select");
         selectionArray.add("Pickup Sheet");
@@ -43,29 +44,39 @@ public class TypeSelectionActivity extends AppCompatActivity implements AdapterV
 
         // attaching data adapter to spinner
         spinnerType_selection.setAdapter(adapter);
+        /*Drop down elements - end*/
 
+
+        /*listview parts - start*/
+
+        // Store string resources into an Array
+        String[] pickupListArray=new String[]{"Galaxy S","Galaxy S2","Galaxy Note","Galaxy Beam","Galaxy Ace Plus"};
+        listPickup=findViewById(R.id.list_pickup);
+
+        // Bind array strings into an adapter
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,
+                android.R.id.text1,pickupListArray);
+        listPickup.setAdapter(arrayAdapter);
+
+        //ListView item click
+        listPickup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String pickup= (String) listPickup.getItemAtPosition(i);
+                Intent intent=new Intent(TypeSelectionActivity.this,CustomerPageActivity.class);
+                intent.putExtra("pickup",pickup);
+                startActivity(intent);
+            }
+        });
+
+        /*listview parts - end*/
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        listPickup=findViewById(R.id.list_pickup);
-
-        ArrayList<String> pickupArray=new ArrayList<>();
-        pickupArray.add("ABCD12345");
-        pickupArray.add("EFGH67890");
-        pickupArray.add("IJKL1112");
-        pickupArray.add("MNOP1314");
-        pickupArray.add("QRST1516");
-
         // On selecting a spinner item
         String item=parent.getItemAtPosition(position).toString();
-
-        if (item.compareToIgnoreCase("pickupArray")==0)
-        {
-            ArrayAdapter<String> adapter=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,pickupArray);
-            listPickup.setAdapter(adapter);
-        }
 
     }
 
