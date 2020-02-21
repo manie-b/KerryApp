@@ -89,11 +89,22 @@ public class TypeSelectionActivity extends AppCompatActivity implements AdapterV
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SpinnerData spinnData= (SpinnerData) parent.getSelectedItem();
                 displaySpinnerData(spinnData);
+                getSelectedUser(view);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
+            }
+        });
+
+
+        /*send data to next activity*/
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(TypeSelectionActivity.this,CustomerPageActivity.class);
+                startActivity(intent);
             }
         });
 
