@@ -56,7 +56,7 @@ public class TypeSelectionActivity extends AppCompatActivity implements AdapterV
         /*listview parts - start*/
         // Store string resources into an Array
         List<SpinnerData> arrayofOTspin=new ArrayList<>();
-        final SpinnerData spinnerData=new SpinnerData("");
+        SpinnerData spinnerData=new SpinnerData("");
         SpinnerData spinnerData1=new SpinnerData("202122UV");
         SpinnerData spinnerData2=new SpinnerData("232425WX");
         SpinnerData spinnerData3=new SpinnerData("262728YZ");
@@ -67,6 +67,17 @@ public class TypeSelectionActivity extends AppCompatActivity implements AdapterV
         SpinnerData spinnerData8=new SpinnerData("11123IJKL");
         SpinnerData spinnerData9=new SpinnerData("14516MNOP");
         SpinnerData spinnerData10=new SpinnerData("17819QRST");
+        arrayofOTspin.add(spinnerData);
+        arrayofOTspin.add(spinnerData1);
+        arrayofOTspin.add(spinnerData2);
+        arrayofOTspin.add(spinnerData3);
+        arrayofOTspin.add(spinnerData4);
+        arrayofOTspin.add(spinnerData5);
+        arrayofOTspin.add(spinnerData6);
+        arrayofOTspin.add(spinnerData7);
+        arrayofOTspin.add(spinnerData8);
+        arrayofOTspin.add(spinnerData9);
+        arrayofOTspin.add(spinnerData10);
 
 
         ArrayAdapter<SpinnerData> arrayAdapter=new ArrayAdapter(this,android.R.layout.simple_spinner_item,arrayofOTspin);
@@ -77,7 +88,7 @@ public class TypeSelectionActivity extends AppCompatActivity implements AdapterV
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SpinnerData spinnData= (SpinnerData) parent.getSelectedItem();
-                displaySpinnerData(spinnerData);
+                displaySpinnerData(spinnData);
             }
 
             @Override
