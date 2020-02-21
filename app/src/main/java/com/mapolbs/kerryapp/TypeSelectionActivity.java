@@ -129,12 +129,6 @@ public class TypeSelectionActivity extends AppCompatActivity implements AdapterV
         {
             Intent intent=new Intent(TypeSelectionActivity.this,BookingActivity.class);
             startActivity(intent);
-        }else if (parent.getItemAtPosition(position).equals("arrayofOTspin"))
-        {
-            String pickup= spinneroutputType.getSelectedItem().toString();
-            Intent intent=new Intent(TypeSelectionActivity.this,CustomerPageActivity.class);
-            intent.putExtra("pickup",pickup.toString());
-            startActivity(intent);
         }
 
     }
