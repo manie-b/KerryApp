@@ -264,7 +264,6 @@ public class BookingActivity extends AppCompatActivity {
 
     private void startLocationUpdates()
     {
-
         mSettingsClient
                 .checkLocationSettings(mLocationSettingsRequest)
                 .addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
