@@ -1,5 +1,7 @@
 package com.mapolbs.kerryapp.Model;
 
+import androidx.annotation.NonNull;
+
 public class SpinnerData {
 
     String pickupData;
@@ -14,5 +16,11 @@ public class SpinnerData {
 
     public void setPickupData(String pickupData) {
         this.pickupData = pickupData;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return pickupData;
     }
 }

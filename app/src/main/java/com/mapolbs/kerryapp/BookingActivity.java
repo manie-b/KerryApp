@@ -349,12 +349,19 @@ public class BookingActivity extends AppCompatActivity {
     /*locaton parts*/
 
 
-    private void captureImage()
+    private void captureImageStore()
     {
-        Intent takePicIntent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(takePicIntent,RequestPermissionCode);
+        File directory=new File(Environment.getExternalStorageDirectory().getPath(),".Kerry_Images");
+        String pic_name=getPictureName();
+        File imageFile=new File(directory,pic_name);
+        Uri imageUri=Uri.fromFile(imageFile);
+        getIntent().putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
+
     }
 
+    private String getPictureName() {
+        return null;
+    }
 
 
     private void EnableRuntimePermission() {

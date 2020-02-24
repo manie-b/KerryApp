@@ -22,9 +22,6 @@ public class CustomerPageActivity extends AppCompatActivity {
 
     private CustomAdapter customAdapter;
 
-    //list data-Declare variable
-    String pickup;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,9 +31,11 @@ public class CustomerPageActivity extends AppCompatActivity {
         recyclerView=findViewById(R.id.recyclerview_custom);
         txtPickupsheetno=findViewById(R.id.txt_pickupsheetno);
 
-        Intent intent=getIntent();
-        pickup=intent.getStringExtra("pickup");
-
+        /*Intent intent=getIntent();
+        pickup=intent.getStringExtra("pickup");*/
+        Bundle bundle=this.getIntent().getExtras();
+        //list data-Declare variable
+        String pickup=bundle.getString("pickup");
         // Set the string into TextView
         txtPickupsheetno.setText(pickup);
 

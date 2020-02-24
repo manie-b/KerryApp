@@ -46,7 +46,7 @@ public class TypeSelectionActivity extends AppCompatActivity implements AdapterV
         ArrayAdapter adapter=new ArrayAdapter(this,android.R.layout.simple_spinner_item,selectionArray);
 
         // Drop down layout style - list view with radio button
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.spinner);
 
         // attaching data adapter to spinner
         spinnerType_selection.setAdapter(adapter);
@@ -81,7 +81,7 @@ public class TypeSelectionActivity extends AppCompatActivity implements AdapterV
 
 
         ArrayAdapter<SpinnerData> arrayAdapter=new ArrayAdapter(this,android.R.layout.simple_spinner_item,arrayofOTspin);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        arrayAdapter.setDropDownViewResource(R.layout.spinner);
         spinneroutputType.setAdapter(arrayAdapter);
 
         spinneroutputType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -89,7 +89,8 @@ public class TypeSelectionActivity extends AppCompatActivity implements AdapterV
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SpinnerData spinnData= (SpinnerData) parent.getSelectedItem();
                 displaySpinnerData(spinnData);
-                getSelectedUser(view);
+                //getSelectedUser(view);
+                btnNext.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -104,22 +105,13 @@ public class TypeSelectionActivity extends AppCompatActivity implements AdapterV
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(TypeSelectionActivity.this,CustomerPageActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putString("pickup",spinneroutputType.getSelectedItem().toString());
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
 
-        //ListView item click
-        /*listPickup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String pickup= (String) listPickup.getItemAtPosition(i);
-                Intent intent=new Intent(TypeSelectionActivity.this,CustomerPageActivity.class);
-                intent.putExtra("pickup",pickup);
-                startActivity(intent);
-            }
-        });*/
-
-        /*listview parts - end*/
     }
 
     public void getSelectedUser(View view)
@@ -132,7 +124,7 @@ public class TypeSelectionActivity extends AppCompatActivity implements AdapterV
         String pickupno=spinnerData.getPickupData();
 
         String data="Pickup No"+pickupno;
-        Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -144,11 +136,14 @@ public class TypeSelectionActivity extends AppCompatActivity implements AdapterV
         if (parent.getItemAtPosition(position).equals("Select"))
         {
             spinneroutputType.setVisibility(View.GONE);
+            btnNext.setVisibility(View.GONE);
         }else if (parent.getItemAtPosition(position).equals("Pickup Sheet"))
         {
             spinneroutputType.setVisibility(View.VISIBLE);
+            btnNext.setVisibility(View.GONE);
         }else if (parent.getItemAtPosition(position).equals("Normal"))
         {
+            btnNext.setVisibility(View.GONE);
             Intent intent=new Intent(TypeSelectionActivity.this,BookingActivity.class);
             startActivity(intent);
         }

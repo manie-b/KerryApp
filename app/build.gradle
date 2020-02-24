@@ -48,4 +48,7 @@ dependencies {
     // location play services
     implementation 'com.google.android.gms:play-services-location:15.0.1'
 
+    /*signature library new*/
+    implementation 'com.kyanogen.signatureview:signature-view:1.0'
+
 }

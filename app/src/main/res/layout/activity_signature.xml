@@ -23,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none"
+        android:id="@+id/scrollView"
         android:layout_below="@id/kerry_logo"
         android:focusableInTouchMode="true">
 
@@ -158,14 +159,17 @@
 
                 </LinearLayout>
 
-                <com.github.gcacace.signaturepad.views.SignaturePad
+
+                <com.kyanogen.signatureview.SignatureView
+                    xmlns:sign="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/signature_view"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:id="@+id/sign_pad"/>
+                    android:layout_weight="1"
+                    sign:penSize="5dp"
+                    sign:backgroundColor="#ffffff"
+                    sign:penColor="#000000"
+                    sign:enableSignature="true"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
