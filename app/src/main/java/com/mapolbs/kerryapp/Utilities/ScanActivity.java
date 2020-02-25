@@ -1,6 +1,7 @@
 package com.mapolbs.kerryapp.Utilities;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,6 +42,14 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
 
         BookingActivity.et_consignNumber.setText(result.getText());
         onBackPressed();
+
+        /*restrict edittext editable after get the result from scanner here*/
+        if (!(result.getText() ==null))
+        {
+            BookingActivity.et_consignNumber.setKeyListener(null);
+        }else {
+            Toast.makeText(this, "Dont OverWrite Here..!", Toast.LENGTH_SHORT).show();
+        }
 
         // If you would like to resume scanning, call this method below:
         //mScannerView.resumeCameraPreview(this);

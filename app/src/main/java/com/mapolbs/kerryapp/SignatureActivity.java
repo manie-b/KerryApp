@@ -6,25 +6,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.hardware.Camera;
+import android.location.Location;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -32,6 +33,19 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.github.gcacace.signaturepad.views.SignaturePad;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -44,8 +58,10 @@ import com.kyanogen.signatureview.SignatureView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -73,6 +89,28 @@ public class SignatureActivity extends AppCompatActivity {
 
     ScrollView scrollView;
 
+    String devicedate1;
+    private Uri fileUri;
+    File captureimgfile;
+
+    /*loaction apis*/
+    // boolean flag to toggle the ui
+    private Boolean nRequestingLocationUpdates;
+
+    // bunch of location related apis
+    private FusedLocationProviderClient nFusedLocationClient;
+    private SettingsClient nSettingsClient;
+    private LocationRequest nLocationRequest;
+    private LocationSettingsRequest nLocationSettingsRequest;
+    private LocationCallback nLocationCallback;
+    private Location nCurrentLocation;
+
+    // location updates interval - 10sec
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDSS = 10000;
+    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDSS = 5000;
+
+    private static final int REQUEST_CHECK_SETTINGSS = 100;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +130,8 @@ public class SignatureActivity extends AppCompatActivity {
         scrollView=findViewById(R.id.scrollView);
 
         EnableRuntimePermission();
+
+        init();
 
         //click listener
         et_intime.setOnClickListener(new View.OnClickListener() {
@@ -145,6 +185,7 @@ public class SignatureActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent,1);
+
             }
         });
 
@@ -159,10 +200,34 @@ public class SignatureActivity extends AppCompatActivity {
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /*signature part*/
                 bitmap = signatureView.getSignatureBitmap();
                 path = saveImage(bitmap);
                 requestPermissions();
-                //Toast.makeText(SignatureActivity.this, "Datas Saved", Toast.LENGTH_SHORT).show();
+                /*signature part*/
+
+
+                /*location run time permission*/
+                Dexter.withActivity(SignatureActivity.this)
+                        .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                        .withListener(new PermissionListener() {
+                            @Override
+                            public void onPermissionGranted(PermissionGrantedResponse response) {
+                                nRequestingLocationUpdates = true;
+                                startLocationUpdatess();
+                            }
+
+                            @Override
+                            public void onPermissionDenied(PermissionDeniedResponse response) {
+                                openSettingss();
+                            }
+
+                            @Override
+                            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                                token.continuePermissionRequest();
+                            }
+                        }).check();
+
             }
         });
 
@@ -181,7 +246,7 @@ public class SignatureActivity extends AppCompatActivity {
                         return false;
 
                     case MotionEvent.ACTION_UP:
-                        // Allow scroll View to interceot the touch event
+                        // Allow scroll View to intercept the touch event
                         scrollView.requestDisallowInterceptTouchEvent(false);
                         return true;
 
@@ -197,14 +262,104 @@ public class SignatureActivity extends AppCompatActivity {
 
     }
 
+    private void init() {
+        nFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        nSettingsClient = LocationServices.getSettingsClient(this);
+        nRequestingLocationUpdates = false;
+
+        nLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                // location is received
+                nCurrentLocation = locationResult.getLastLocation();
+
+                updateLocationsUI();
+            }
+        };
+
+        nLocationRequest = new LocationRequest();
+        nLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDSS);
+        nLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDSS);
+        nLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(nLocationRequest);
+        nLocationSettingsRequest = builder.build();
+    }
+
+    private void openSettingss() {
+        Intent intent = new Intent();
+        intent.setAction(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package",
+                BuildConfig.APPLICATION_ID, null);
+        intent.setData(uri);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    private void startLocationUpdatess() {
+
+        nSettingsClient
+                .checkLocationSettings(nLocationSettingsRequest)
+                .addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
+                    @SuppressLint("MissingPermission")
+                    @Override
+                    public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                        Toast.makeText(getApplicationContext(), "Started location updates!", Toast.LENGTH_SHORT).show();
+                        //noinspection MissingPermission
+                        nFusedLocationClient.requestLocationUpdates(nLocationRequest,
+                                nLocationCallback, Looper.myLooper());
+
+                        updateLocationsUI();
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        int statusCode = ((ApiException) e).getStatusCode();
+                        switch (statusCode) {
+                            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+
+                                try {
+                                    // Show the dialog by calling startResolutionForResult(), and check the
+                                    // result in onActivityResult().
+                                    ResolvableApiException rae = (ResolvableApiException) e;
+                                    rae.startResolutionForResult(SignatureActivity.this, REQUEST_CHECK_SETTINGSS);
+                                } catch (IntentSender.SendIntentException sie) {
+
+                                }
+                                break;
+                            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                                String errorMessage = "Location settings are inadequate, and cannot be " +
+                                        "fixed here. Fix in Settings.";
+
+
+                                Toast.makeText(SignatureActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                        }
+
+                        updateLocationsUI();
+                    }
+                });
+
+    }
+
+    private void updateLocationsUI() {
+        /*Update the UI displaying the location data and toggling the buttons*/
+        if (nCurrentLocation != null) {
+            /*output of the location*/
+            Toast.makeText(this, nCurrentLocation.getLatitude()+","+ nCurrentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     /*runtime permission - storage*/
     private void requestPermissions()
     {
 
         Dexter.withActivity(SignatureActivity.this).withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE
-        ,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION
-        ,Manifest.permission.ACCESS_COARSE_LOCATION)
+        ,Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
@@ -246,6 +401,7 @@ public class SignatureActivity extends AppCompatActivity {
         });
         builder.show();
     }
+    /*runtime permission - storage*/
 
 
     private void EnableRuntimePermission() {
@@ -300,10 +456,6 @@ public class SignatureActivity extends AppCompatActivity {
             File f = new File(wallpaperDirectory, Calendar.getInstance()
                     .getTimeInMillis() + ".jpg");
             f.createNewFile();
-            /*if (!f.exists())
-            {
-                f.createNewFile();
-            }*/
 
             FileOutputStream fo = new FileOutputStream(f);
             fo.write(baos.toByteArray());
@@ -322,15 +474,59 @@ public class SignatureActivity extends AppCompatActivity {
     }
 
 
+    /*capture image stored internal storage*/
+    private void storeCameraPhotoInSDCard(Bitmap bitmap,String currentDate)
+    {
+        File directory=new File(Environment.getExternalStorageDirectory().getPath(),File.separator+".Kerry_Root"+ File.separator+"Kerry_Images");
+        File outputFile=new File(directory, "/IMG_"+devicedate1+"_"+".jpg");
+
+        if (!directory.exists())
+        {
+            directory.mkdirs();
+        }
+
+        try {
+            FileOutputStream fileOutputStream=new FileOutputStream(outputFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,fileOutputStream);
+            fileOutputStream.flush();
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        /*new*/
+        Calendar calendar=Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("ddMMyyyy_HHmmss");
+        devicedate1=simpleDateFormat.format(calendar.getTime());
 
         if (requestCode==1 && resultCode==RESULT_OK)
         {
             cap1sealimageview.setVisibility(View.VISIBLE);
             Bitmap bitmap= (Bitmap) data.getExtras().get("data");
             cap1sealimageview.setImageBitmap(bitmap);
+
+            /*new*/
+            File destination = null;
+            File directory=null;
+            String imagename = "";
+            String imagepath = "";
+
+            directory=new File(Environment.getExternalStorageDirectory().getPath(),File.separator+".Kerry_Root"+ File.separator+"Kerry_Images");
+            destination=new File(directory, "/IMG_"+devicedate1+"_"+".jpg");
+            storeCameraPhotoInSDCard(bitmap,devicedate1);
+
+            Log.i("Folder Created--->", String.valueOf(directory));
+            Log.i("File Created--->", String.valueOf(destination));
+
         }
 
     }

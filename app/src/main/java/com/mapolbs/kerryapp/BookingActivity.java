@@ -54,6 +54,9 @@ import com.mapolbs.kerryapp.Utilities.ScanActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -73,6 +76,7 @@ public class BookingActivity extends AppCompatActivity {
     LinearLayout ll_packagetype,ll_couriertype,ll_NoOfpackage;
 
     public static EditText et_consignNumber;
+    EditText etNoOfpackage;
 
     String currentPhotoPath;
     String devicedate;
@@ -95,6 +99,7 @@ public class BookingActivity extends AppCompatActivity {
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = 5000;
 
     private static final int REQUEST_CHECK_SETTINGS = 100;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +128,8 @@ public class BookingActivity extends AppCompatActivity {
 
         et_consignNumber=findViewById(R.id.et_consign_num);
 
+        etNoOfpackage=findViewById(R.id.et_NoOfpackage);
+
         rgrpcourier_type=findViewById(R.id.radio_grp_courier);
         rgrp_packagetype=findViewById(R.id.radio_grp_package);
         rgrpcargo_or_courier=findViewById(R.id.radio_grp_cargo_courier);
@@ -142,27 +149,6 @@ public class BookingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent,1);
-
-
-                //file store
-                Calendar calendar=Calendar.getInstance();
-                SimpleDateFormat simpleDateFormat=new SimpleDateFormat("ddMMyyyy_HHmmss");
-                devicedate=simpleDateFormat.format(calendar.getTime());
-
-                File destination=new File(Environment.getExternalStorageDirectory().getPath(),File.separator+".Kerry_pickup"+File.separator+"KerryCaptureImages");
-                captureImageFile=new File(destination,"/IMG"+"_"+devicedate+".jpg");
-
-                System.out.println(captureImageFile);
-
-                if (!destination.exists())
-                {
-                    destination.mkdirs();
-                    System.out.println("Camera Pic");
-                }
-
-                fileuri=Uri.fromFile(captureImageFile);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT,fileuri);
-
             }
         });
 
@@ -197,6 +183,7 @@ public class BookingActivity extends AppCompatActivity {
                 if (rb_box.isChecked())
                 {
                     ll_NoOfpackage.setVisibility(View.VISIBLE);
+                    etNoOfpackage.requestFocus(); //new
                 }else if (rb_weight.isChecked())
                 {
                     ll_NoOfpackage.setVisibility(View.GONE);
@@ -256,8 +243,8 @@ public class BookingActivity extends AppCompatActivity {
     private void updateLocationUI() {
 
         if (mCurrentLocation != null) {
+            /*output of the location*/
             Toast.makeText(this, mCurrentLocation.getLatitude()+","+mCurrentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
-
         }
 
     }
@@ -349,20 +336,6 @@ public class BookingActivity extends AppCompatActivity {
     /*locaton parts*/
 
 
-    private void captureImageStore()
-    {
-        File directory=new File(Environment.getExternalStorageDirectory().getPath(),".Kerry_Images");
-        String pic_name=getPictureName();
-        File imageFile=new File(directory,pic_name);
-        Uri imageUri=Uri.fromFile(imageFile);
-        getIntent().putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
-
-    }
-
-    private String getPictureName() {
-        return null;
-    }
-
 
     private void EnableRuntimePermission() {
 
@@ -398,35 +371,78 @@ public class BookingActivity extends AppCompatActivity {
 
     }
 
+
+    /*capture image stored internal storage*/
+    private void storeCameraPhotoInSDCard(Bitmap bitmap,String currentDate)
+    {
+        File directory=new File(Environment.getExternalStorageDirectory().getPath(),File.separator+".Kerry_Root"+ File.separator+"Kerry_Images");
+        File outputFile=new File(directory, "/IMG_"+devicedate+"_"+".jpg");
+
+        if (!directory.exists())
+        {
+            directory.mkdirs();
+        }
+
+        try {
+            FileOutputStream fileOutputStream=new FileOutputStream(outputFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,fileOutputStream);
+            fileOutputStream.flush();
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        /*new*/
+        Calendar calendar=Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("ddMMyyyy_HHmmss");
+        devicedate=simpleDateFormat.format(calendar.getTime());
 
         if (requestCode==1 && resultCode==RESULT_OK)
         {
             capture_img1.setVisibility(View.VISIBLE);
-            //Glide.with(this).load(currentPhotoPath).into(capture_img1);
-            Glide.with(this).load(new File(fileuri.getPath())).into(capture_img1);
             Bitmap bitmap= (Bitmap) data.getExtras().get("data");
             capture_img1.setImageBitmap(bitmap);
+
+            /*new*/
+            File destination = null;
+            File directory=null;
+            String imagename = "";
+            String imagepath = "";
+
+            directory=new File(Environment.getExternalStorageDirectory().getPath(),File.separator+".Kerry_Root"+ File.separator+"Kerry_Images");
+            destination=new File(directory, "/IMG_"+devicedate+"_"+".jpg");
+            storeCameraPhotoInSDCard(bitmap,devicedate);
+
+            Log.i("Folder Created--->", String.valueOf(directory));
+            Log.i("File Created--->", String.valueOf(destination));
         }
         else if (requestCode==2&&resultCode==RESULT_OK)
         {
             capture_img2.setVisibility(View.VISIBLE);
             Bitmap bitmap= (Bitmap) data.getExtras().get("data");
             capture_img2.setImageBitmap(bitmap);
+
+            /*new*/
+            File destination = null;
+            File directory=null;
+            String imagename = "";
+            String imagepath = "";
+
+            directory=new File(Environment.getExternalStorageDirectory().getPath(),File.separator+".Kerry_Root"+ File.separator+"Kerry_Images");
+            destination=new File(directory, "/IMG_"+devicedate+"_"+".jpg");
+            storeCameraPhotoInSDCard(bitmap,devicedate);
+
+            Log.i("Folder Created--->", String.valueOf(directory));
+            Log.i("File Created--->", String.valueOf(destination));
         }
 
-    }
-
-
-    public Uri getImageUri(Context inContext,Bitmap inImage)
-    {
-        ByteArrayOutputStream bytes=new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG,100,bytes);
-        String path= MediaStore.Images.Media.insertImage(inContext.getContentResolver(),inImage,"Title",null);
-        return Uri.parse(path);
     }
 
 
