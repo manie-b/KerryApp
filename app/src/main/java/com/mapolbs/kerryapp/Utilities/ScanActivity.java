@@ -1,6 +1,7 @@
 package com.mapolbs.kerryapp.Utilities;
 
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -14,6 +15,8 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class ScanActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
 
     ZXingScannerView mScannerView;
+
+    int maxLength=16;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,12 +46,14 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
         BookingActivity.et_consignNumber.setText(result.getText());
         onBackPressed();
 
+        /*set letters input limit for edittext*/
+        BookingActivity.et_consignNumber.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
+
+
         /*restrict edittext editable after get the result from scanner here*/
         if (!(result.getText() ==null))
         {
             BookingActivity.et_consignNumber.setKeyListener(null);
-        }else {
-            Toast.makeText(this, "Dont OverWrite Here..!", Toast.LENGTH_SHORT).show();
         }
 
         // If you would like to resume scanning, call this method below:
